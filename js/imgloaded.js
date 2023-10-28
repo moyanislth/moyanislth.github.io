@@ -55,17 +55,17 @@
 
   const ldconfig = {
     light: {
-	  smallSrc: '浅色模式小图.png',
-	  largeSrc: '浅色模式大图.png',
-	  mobileSmallSrc: '浅色模式手机小图.png',
-	  mobileLargeSrc: '浅色模式手机大图.png',
+	  smallSrc: 'themes\\butterfly\\source\\img\\top_img.jpg',
+	  largeSrc: 'themes\\butterfly\\source\\img\\top_img.jpg',
+	  mobileSmallSrc: 'themes\\butterfly\\source\\img\\top_img.jpg',
+	  mobileLargeSrc: 'themes\\butterfly\\source\\img\\top_img.jpg',
 	  enableRoutes: ['/'],
 	  },
 	dark: {
-	  smallSrc: '深色模式小图.png',
-	  largeSrc: '深色模式大图.png',
-	  mobileSmallSrc: '深色模式手机小图.png',
-	  mobileLargeSrc: '深色模式手机大图.png',
+	  smallSrc: 'themes\\butterfly\\source\\img\\top_img.jpg',
+	  largeSrc: 'themes\\butterfly\\source\\img\\top_img.jpg',
+	  mobileSmallSrc: 'themes\\butterfly\\source\\img\\top_img.jpg',
+	  mobileLargeSrc: 'themes\\butterfly\\source\\img\\top_img.jpg',
 	  enableRoutes: ['/'],
 	  },
 	};
