@@ -13,7 +13,7 @@
     // 这里的1是滚动全程渐变 改为0.3就是前30%渐变后固定前30%产生的渐变效果
     initScrollListener() {
       window.addEventListener("scroll", (()=>{
-        var e = Math.min(window.scrollY / window.innerHeight, 1);
+        var e = Math.min(window.scrollY / window.innerHeight, 0.5);
         this.container.style.setProperty("--process", e)
       }
       ))
