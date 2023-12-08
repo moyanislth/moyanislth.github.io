@@ -34,6 +34,21 @@
       </tags>
   </entry>
   <entry>
+    <title>一文理清服务器和网站</title>
+    <url>/2023/11/30/%E4%B8%80%E6%96%87%E7%90%86%E6%B8%85%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%92%8C%E7%BD%91%E7%AB%99/</url>
+    <content><![CDATA[<h2 id="1、服务器"><a href="#1、服务器" class="headerlink" title="1、服务器"></a>1、服务器</h2><p>网络把所有的计算机连接，对外提供服务的就是服务器，服务器本身就是台24h无休的电脑，供用户访问电脑上的资源。</p>
+<h2 id="2、网站"><a href="#2、网站" class="headerlink" title="2、网站"></a>2、网站</h2><p>网站是由开发人员写的前后端在发布后展现在网络上的内容，这些内容本身原本在一个文件夹里，在部署到服务器后，移植到比如服务器的WWW文件夹，通过开放端口，来达到可以直接访问的目的。</p>
+<h2 id="3、域名"><a href="#3、域名" class="headerlink" title="3、域名"></a>3、域名</h2><p>当客户端访问域名，由于域名被解析过，域名会跳转到解析的ip，如果经过dns还会先在dns的ip上查找是否有缓存好的静态数据，如果有直接呈现，没有就从源ip（即服务器公网地址）上查找文件。</p>
+<h2 id="4、其实"><a href="#4、其实" class="headerlink" title="4、其实"></a>4、其实</h2><p>其实写个网站就是在服务器上安装各种服务，然后写个页面在服务器上能通过端口运行。其他人访问网站只是通过域名链接ip通过端口访问到这个服务器这个资源。</p>
+]]></content>
+      <categories>
+        <category>网络知识</category>
+      </categories>
+      <tags>
+        <tag>服务器</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Hello World</title>
     <url>/2023/11/18/hello-world/</url>
     <content><![CDATA[<p>Welcome to <a href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p>
@@ -50,21 +65,6 @@
 
 <p>More info: <a href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>
 ]]></content>
-  </entry>
-  <entry>
-    <title>一文理清服务器和网站</title>
-    <url>/2023/11/30/%E4%B8%80%E6%96%87%E7%90%86%E6%B8%85%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%92%8C%E7%BD%91%E7%AB%99/</url>
-    <content><![CDATA[<h2 id="1、服务器"><a href="#1、服务器" class="headerlink" title="1、服务器"></a>1、服务器</h2><p>网络把所有的计算机连接，对外提供服务的就是服务器，服务器本身就是台24h无休的电脑，供用户访问电脑上的资源。</p>
-<h2 id="2、网站"><a href="#2、网站" class="headerlink" title="2、网站"></a>2、网站</h2><p>网站是由开发人员写的前后端在发布后展现在网络上的内容，这些内容本身原本在一个文件夹里，在部署到服务器后，移植到比如服务器的WWW文件夹，通过开放端口，来达到可以直接访问的目的。</p>
-<h2 id="3、域名"><a href="#3、域名" class="headerlink" title="3、域名"></a>3、域名</h2><p>当客户端访问域名，由于域名被解析过，域名会跳转到解析的ip，如果经过dns还会先在dns的ip上查找是否有缓存好的静态数据，如果有直接呈现，没有就从源ip（即服务器公网地址）上查找文件。</p>
-<h2 id="4、其实"><a href="#4、其实" class="headerlink" title="4、其实"></a>4、其实</h2><p>其实写个网站就是在服务器上安装各种服务，然后写个页面在服务器上能通过端口运行。其他人访问网站只是通过域名链接ip通过端口访问到这个服务器这个资源。</p>
-]]></content>
-      <categories>
-        <category>网络知识</category>
-      </categories>
-      <tags>
-        <tag>服务器</tag>
-      </tags>
   </entry>
   <entry>
     <title>文本编辑器 Vi  Linux 新手课程</title>
