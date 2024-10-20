@@ -67,6 +67,607 @@
       </tags>
   </entry>
   <entry>
+    <title>springboot3+vue3全栈开发</title>
+    <url>/2024/10/20/springboot3-vue3%E5%85%A8%E6%A0%88%E5%BC%80%E5%8F%91/</url>
+    <content><![CDATA[<h1 id="springboot3-vue3全栈开发-重点小计"><a href="#springboot3-vue3全栈开发-重点小计" class="headerlink" title="springboot3+vue3全栈开发 重点小计"></a><em><strong>springboot3+vue3全栈开发 重点小计</strong></em></h1><h1 id="基础篇"><a href="#基础篇" class="headerlink" title="基础篇"></a>基础篇</h1><h2 id="basic-springboot概述"><a href="#basic-springboot概述" class="headerlink" title="basic-springboot概述"></a>basic-springboot概述</h2><p>传统spring：导入依赖繁琐，项目配置繁琐</p>
+<p>springboot：</p>
+<p>​				起步依赖：本质Maven坐标，整合一个功能所需所有坐标</p>
+<p>​				自动配置：约定大于配置、boot启动后bean对象自动注入ioc容器，不用手动声明</p>
+<p>​				其他：内嵌tomcat，jetty；外部配置，修改配置文件不需要修改jar包；少量xml配置。</p>
+<h2 id="basic-springboot入门"><a href="#basic-springboot入门" class="headerlink" title="basic-springboot入门"></a>basic-springboot入门</h2><p>步骤：</p>
+<ol>
+<li>创建maven工程</li>
+<li>导入spring-boot-starter-web起步依赖</li>
+<li>编写Controller</li>
+<li>提供启动类</li>
+</ol>
+<h2 id="basic-springboot工程（模块）创建"><a href="#basic-springboot工程（模块）创建" class="headerlink" title="basic-springboot工程（模块）创建"></a>basic-springboot工程（模块）创建</h2><ol>
+<li><p>创建maven工程</p>
+</li>
+<li><p>引入依赖</p>
+<p>pom文件：</p>
+<ol>
+<li><p>继承父工程</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">&lt;parent&gt;</span><br><span class="line">      &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;</span><br><span class="line">  	  &lt;artifactId&gt;spring-boot-starter-parent&lt;/artifactId&gt;</span><br><span class="line">  	  &lt;version&gt;<span class="number">2.3</span><span class="number">.5</span>.RELEASE&lt;/version&gt;</span><br><span class="line">&lt;/parent&gt;</span><br></pre></td></tr></table></figure>
+
+
+</li>
+<li><p>引入起步依赖，不需要指定版本号，父工程会管理</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">&lt;dependency&gt;</span><br><span class="line">	&lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;</span><br><span class="line">	&lt;artifactId&gt;spring-boot-starter-web&lt;/artifactId&gt;</span><br><span class="line">&lt;/dependency&gt;</span><br></pre></td></tr></table></figure></li>
+</ol>
+<p>​	</p>
+</li>
+<li><p>提供启动类，创建resources目录和application.properties</p>
+<p>启动类名字一般是工程名（springboot-create-manual）加application</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@SpringBootApplication</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">SpringBootCreateManualApplication</span> &#123;</span><br><span class="line">	<span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(string[]args)</span>&#123;</span><br><span class="line">		SpringApplication.run(SpringBootCreateManualApplication.class,args)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+</ol>
+<h2 id="basic-yml配置信息书写和获取"><a href="#basic-yml配置信息书写和获取" class="headerlink" title="basic-yml配置信息书写和获取"></a>basic-yml配置信息书写和获取</h2><p>键值对形式，冒号后空格后再写值</p>
+<figure class="highlight yml"><table><tr><td class="code"><pre><span class="line"><span class="string">application.yml</span></span><br><span class="line"></span><br><span class="line"><span class="attr">email:</span></span><br><span class="line">    <span class="attr">user:</span> <span class="number">593140521</span><span class="string">@qq.com</span></span><br><span class="line">    <span class="attr">code:</span> <span class="string">jfejwezhcrzcbbbb</span></span><br><span class="line">    <span class="attr">host:</span> <span class="string">smtp.qq.com</span></span><br><span class="line">    <span class="attr">auth:</span> <span class="literal">true</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>获取：</strong></p>
+<p>1.@Value(${键名})封装到实体类</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">EmailProperties</span> &#123;</span><br><span class="line">    <span class="meta">@Value(&quot;$&#123;email.user&#125;&quot;)</span></span><br><span class="line">    <span class="comment">//发件人邮箱</span></span><br><span class="line">    <span class="keyword">public</span> String user ;</span><br><span class="line">    </span><br><span class="line">    <span class="meta">@Value(&quot;$&#123;email.code&#125;&quot;)</span></span><br><span class="line">    <span class="comment">//发件人邮箱授权码</span></span><br><span class="line">    <span class="keyword">public</span> String code ;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>2.@ConfigurationProperties(prefic&#x3D;”前缀email”)注解到pojo,要求是实体类属性名和键名一致</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@ConfigurationProperties(prefix=</span></span><br><span class="line"><span class="meta">&quot;email&quot;)</span></span><br><span class="line"><span class="meta">@Component</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">EmailProperties</span> &#123;</span><br><span class="line">    <span class="comment">//发件人邮箱</span></span><br><span class="line">    <span class="keyword">public</span> String user;</span><br><span class="line">    <span class="comment">//授权码(邮件客户端使用)</span></span><br><span class="line">    <span class="keyword">public</span> string code;</span><br><span class="line">    <span class="comment">//发件人邮箱对应的应用服务，如果是163邮箱:smtp.163.com:</span></span><br><span class="line">    <span class="keyword">public</span> string host;</span><br><span class="line">    <span class="comment">//发送邮件前,是否需要对发件人的信息做验证</span></span><br><span class="line">    <span class="keyword">private</span> <span class="type">boolean</span> auth;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="basic-Bean扫描"><a href="#basic-Bean扫描" class="headerlink" title="basic-Bean扫描"></a>basic-Bean扫描</h2><ul>
+<li><p>标签:   </p>
+<p>&lt;context:component-scan base-package&#x3D;”com.example”&#x2F;&gt;</p>
+</li>
+<li><p>启动类上加注解:   </p>
+<p>@ComponentScan(basePackages&#x3D;”com.example”)</p>
+</li>
+</ul>
+<p>@SpringBootApplication &#x3D; @SpringBootConfiguration + @EnableAutoConfiguration + @ComponentScan</p>
+<p>默认扫描启动类所在包及其子包所有Bean对象</p>
+<h2 id="basic-Bean注册"><a href="#basic-Bean注册" class="headerlink" title="basic-Bean注册"></a>basic-Bean注册</h2><table>
+<thead>
+<tr>
+<th align="left">注解</th>
+<th>说明</th>
+<th>位置</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">@Component</td>
+<td>声明bean的基础注解</td>
+<td>不属于以下三类时，用此注解</td>
+</tr>
+<tr>
+<td align="left">@Controller</td>
+<td>@Component的衍生注解</td>
+<td>标注在控制器类上</td>
+</tr>
+<tr>
+<td align="left">@Service</td>
+<td>@Component的衍生注解</td>
+<td>标注在业务类上</td>
+</tr>
+<tr>
+<td align="left">@Reposrtory</td>
+<td>@Component的衍生注解</td>
+<td>标注在数据访问类上(由于与mybatis整合，用的少)</td>
+</tr>
+</tbody></table>
+<p>第三方bean对象（非自定义）无法使用上面的注解,需要使用以下注解</p>
+<ul>
+<li><p>@Bean</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">CommonConfig</span>&#123;</span><br><span class="line">	<span class="meta">@Bean(&quot;name&quot;)</span></span><br><span class="line">	<span class="keyword">public</span> Resolver <span class="title function_">resolver</span><span class="params">()</span>&#123;</span><br><span class="line">    	<span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">Resolver</span>();</span><br><span class="line">	&#125; </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>Bean默认名称为方法名</p>
+<p>Bean对象可以放在启动类内注册，但是推荐在专门的config包内注册</p>
+</li>
+<li><p>@Import</p>
+<p>在启动类加@Import(xxx.class,aaa.class…)注解</p>
+<p>进阶方法：在配置类实现ImportSelector类，读取写好所有所需要全类名的配置文件，用字符串数组返回。然后用Import注解导入该配置类（自动配置原理也是这个）</p>
+</li>
+</ul>
+<h2 id="basic-Bean注册条件"><a href="#basic-Bean注册条件" class="headerlink" title="basic-Bean注册条件"></a>basic-Bean注册条件</h2><table>
+<thead>
+<tr>
+<th align="left">注解</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">@ConditionalonProperty</td>
+<td>配置文件中存在对应的属性，才声明该bean</td>
+</tr>
+<tr>
+<td align="left">@ConditionalonMissingBean</td>
+<td>当不存在当前类型的bean时，才声明该bean</td>
+</tr>
+<tr>
+<td align="left">@Conditionalonclass</td>
+<td>当前环境存在指定的这个类时，才声明该bean</td>
+</tr>
+</tbody></table>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">//注入Country对象</span></span><br><span class="line"><span class="comment">//如果配置文件中配置了指定的信息，则注入，否则不注入</span></span><br><span class="line"><span class="meta">@ConditionalOnProperty(prefix=&quot;country&quot;,name = &#123;&quot;name&quot;,&quot;system&quot;&#125;)</span></span><br><span class="line"><span class="meta">@Bean</span></span><br><span class="line"><span class="keyword">public</span> Country <span class="title function_">country</span><span class="params">(<span class="meta">@Value(&quot;$&#123;country.name&#125;&quot;)</span> String name,<span class="meta">@value(&quot;$&#123;country.system&#125;&quot;)</span> String system)</span>&#123;</span><br><span class="line">    Country country=<span class="keyword">new</span> <span class="title class_">Country</span>:	</span><br><span class="line">    country.setName(name):</span><br><span class="line">    country.setSystem(system);</span><br><span class="line">    <span class="keyword">return</span> country;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="basic-自动配置原理（自定义starter-面试）"><a href="#basic-自动配置原理（自定义starter-面试）" class="headerlink" title="basic-自动配置原理（自定义starter,面试）"></a>basic-自动配置原理（自定义starter,面试）</h2><p>原理和上面import注解一致，主要如下：</p>
+<ol>
+<li>自动配置类</li>
+<li>spring-boot-autoconfigure包内的.imports文件内配置了所有的自动配置类的全类名</li>
+</ol>
+<p>自动配置：</p>
+<ol>
+<li>CommonConfig也就是Bean注入由jar包提供</li>
+<li>jar包内写个自动配置类，添加两个注解@AutoConfigration@Import(CommonConfig.class)把自动配置类导入进来</li>
+<li>将自动配置类全类名写入.imports文件(boot2.7以前读取的是spring.factories文件)</li>
+</ol>
+<p>其实就是所有配置在jar包内全给你写好了而已 </p>
+<h2 id="basic-自定义starter"><a href="#basic-自定义starter" class="headerlink" title="basic-自定义starter"></a>basic-自定义starter</h2><p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="D:\使用优化\Typora\笔记\img\image-20240929164306007.png" alt="image-20240929164306007"></p>
+<p>需求:自定义mybatis的starter</p>
+<p>步骤:</p>
+<ol>
+<li>创建 dmybatis-spring-boot-autoconfigure 模块，提供自动配置功能，并自定义配置文件 META-INF&#x2F;spring&#x2F;xxx.imports</li>
+<li>创建 dmybatis-spring-boot-starter 模块，在starter中引入自动配置模块(建议autoconfigure中的依赖复制一份到starter)</li>
+</ol>
+<h1 id="实战篇-后端"><a href="#实战篇-后端" class="headerlink" title="实战篇-后端"></a>实战篇-后端</h1><h2 id="practice-SpingValidation参数校验"><a href="#practice-SpingValidation参数校验" class="headerlink" title="practice-SpingValidation参数校验"></a>practice-SpingValidation参数校验</h2><ol>
+<li>引入Sping Validation起步依赖</li>
+<li>参数前添加@Pattern注解</li>
+<li>Controller类上添加@Validated注解</li>
+</ol>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="comment">&lt;!--SpringValidatino依赖--&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-starter-validation<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>示例：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Validated</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">UserController</span> &#123;</span><br><span class="line">    </span><br><span class="line">    <span class="meta">@Autowired</span></span><br><span class="line">    <span class="keyword">private</span> UserServive userServive;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 正则表达式校验用户名和密码，\S非空 或者直接@NotNull，长度5-16</span></span><br><span class="line">    <span class="keyword">public</span> Result <span class="title function_">register</span><span class="params">(<span class="meta">@NotNull</span> <span class="meta">@Pattern(regexp = &quot;^\&#123;5,16&#125;$&quot;)</span> String username, </span></span><br><span class="line"><span class="params">                           <span class="meta">@NotNull</span> <span class="meta">@Pattern(regexp = &quot;^\\S&#123;5,16&#125;$&quot;)</span> String password)</span>&#123;</span><br><span class="line">       </span><br><span class="line">        <span class="type">User</span> <span class="variable">user</span> <span class="operator">=</span> userServive.findByUserName(username);</span><br><span class="line">        <span class="keyword">if</span> (user == <span class="literal">null</span>)&#123;</span><br><span class="line">            userServive.register(username, password);</span><br><span class="line">            <span class="keyword">return</span> Result.success();</span><br><span class="line">        &#125;<span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="keyword">return</span> Result.error(<span class="string">&quot;用户名已存在&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="practice-全局异常处理器"><a href="#practice-全局异常处理器" class="headerlink" title="practice- 全局异常处理器"></a>practice- 全局异常处理器</h2><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">// Restxxx注解，返回值都会被转换成json字符串</span></span><br><span class="line"></span><br><span class="line"><span class="meta">@RestControllerAdvice</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">GlobalExceptionHandler</span>&#123;</span><br><span class="line">    <span class="comment">// 处理所有异常</span></span><br><span class="line">    <span class="meta">@ExceptionHandler(Exception.class)</span></span><br><span class="line">    <span class="keyword">public</span> Result <span class="title function_">handleException</span><span class="params">(Exceptione)</span>&#123;</span><br><span class="line">        e.printStackTrace();</span><br><span class="line">        <span class="keyword">return</span> Result.error(StringUtils.hasLength(e.getMessage())? e.getMessage():<span class="string">&quot;操作失败&quot;</span>)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="practice-JWT（JSON-Web-Token）"><a href="#practice-JWT（JSON-Web-Token）" class="headerlink" title="practice-JWT（JSON Web Token）"></a>practice-JWT（JSON Web Token）</h2><h4 id="组成："><a href="#组成：" class="headerlink" title="组成："></a>组成：</h4><p>jwt格式：A.B.C	</p>
+<ul>
+<li>A–&gt;{“alg”:”HS256”,”type”:”JWT”}</li>
+<li>B–&gt;{“id”:”1”,username”:”Tom”}</li>
+<li>C–&gt;数字签名(header.payload，secret)</li>
+</ul>
+<p>第一部分:Header(头)，记录令牌类型、签名算法等。 例如:{“alg”:”HS256”,”type”:”JWT”}</p>
+<p>第二部分:Payload(有效载荷)，携带一些自定义信息、默认信息等。例如:{“id”:”1”,”username”:”Tom”}</p>
+<p>第三部分:Signature(签名)，防止Token被篡改、确保安全性。将header、payload，并加入指定秘钥，通过指定签名算法计算而来。</p>
+<h4 id="使用："><a href="#使用：" class="headerlink" title="使用："></a>使用：</h4><ol>
+<li><p>引入java-jwt依赖</p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="comment">&lt;!--jwt依赖--&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>com.auth0<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>java-jwt<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>4.4.0<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+
+</li>
+<li><p>jwt的生成与解析</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">TestGenerateJwt</span><span class="params">()</span>&#123;</span><br><span class="line"></span><br><span class="line">    Map&lt;String, Object&gt; claims = <span class="keyword">new</span> <span class="title class_">HashMap</span>&lt;&gt;();</span><br><span class="line">    claims.put(<span class="string">&quot;id&quot;</span>, <span class="number">1</span>);</span><br><span class="line">    claims.put(<span class="string">&quot;name&quot;</span>, <span class="string">&quot;张三&quot;</span>);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 生成jwt令牌</span></span><br><span class="line">    <span class="type">String</span> <span class="variable">token</span> <span class="operator">=</span> JWT.create()</span><br><span class="line">        <span class="comment">// 设置头部信息</span></span><br><span class="line">        .withClaim(<span class="string">&quot;username&quot;</span>, claims)</span><br><span class="line">        <span class="comment">// 设置过期时间</span></span><br><span class="line">        .withExpiresAt(<span class="keyword">new</span> <span class="title class_">Date</span>(System.currentTimeMillis() + <span class="number">1000</span> * <span class="number">60</span> * <span class="number">60</span> * <span class="number">24</span>))</span><br><span class="line">        <span class="comment">// 设置加密算法和密钥</span></span><br><span class="line">        .sign(Algorithm.HMAC256(<span class="string">&quot;abc&quot;</span>));</span><br><span class="line"></span><br><span class="line">    System.out.printf(token);</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">TestParseJwt</span><span class="params">()</span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="type">String</span> <span class="variable">token</span> <span class="operator">=</span> <span class="string">&quot;eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6eyJpZCI6MSwidXNlcm5hbWUiOiLlvKDkuIkifSwiZXhwIjoxNzI3NzA0NTIzfQ.vcxo3k7cBmbkj_sMs37hXUT4ncIiJkym38xxR1k4Wng&quot;</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 生成一个解析后的jwt对象,注意密钥abc要一致</span></span><br><span class="line">    <span class="type">DecodedJWT</span> <span class="variable">decodedJWT</span> <span class="operator">=</span> JWT.require(Algorithm.HMAC256(<span class="string">&quot;abx&quot;</span>)).build().verify(token);</span><br><span class="line"></span><br><span class="line">    Map&lt;String, Object&gt; claims = decodedJWT.getClaim(<span class="string">&quot;username&quot;</span>).asMap();</span><br><span class="line">    System.out.printf(claims.toString());</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>使用拦截器实现登录认证</p>
+<ul>
+<li><p>创建LoginInterceptor实现HandlerInterceptor重写preHandle方法</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Component</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">LoginInterceptor</span> <span class="keyword">implements</span> <span class="title class_">HandlerInterceptor</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 在请求处理之前进行调用（Controller方法调用之前）</span></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">preHandle</span><span class="params">(HttpServletRequest request, HttpServletResponse response, Object handler)</span> <span class="keyword">throws</span> Exception &#123;</span><br><span class="line">        <span class="comment">// 验证请求头Authorization携带的token</span></span><br><span class="line">        <span class="type">String</span> <span class="variable">token</span> <span class="operator">=</span> request.getHeader(<span class="string">&quot;Authorization&quot;</span>);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            JwtUtil.parseToken(token);</span><br><span class="line">        &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">            response.setStatus(<span class="number">401</span>);</span><br><span class="line">            <span class="comment">// 不放行</span></span><br><span class="line">            <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 放行</span></span><br><span class="line">        <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+</li>
+<li><p>配置WebConfig实现WebMvcConfigurer注册拦截器</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">WebConfig</span> <span class="keyword">implements</span> <span class="title class_">WebMvcConfigurer</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Autowired</span></span><br><span class="line">    <span class="keyword">private</span> LoginInterceptor loginInterceptor;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">addInterceptors</span><span class="params">(InterceptorRegistry registry)</span> &#123;</span><br><span class="line">        <span class="comment">// 注册拦截器; 拦截所有请求，除了/login和/register</span></span><br><span class="line">        registry.addInterceptor(loginInterceptor)</span><br><span class="line">                .addPathPatterns(<span class="string">&quot;/**&quot;</span>)</span><br><span class="line">                .excludePathPatterns(<span class="string">&quot;/user/login&quot;</span>, <span class="string">&quot;/user/register&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure></li>
+</ul>
+</li>
+</ol>
+<h2 id="practice-小小的注意事项"><a href="#practice-小小的注意事项" class="headerlink" title="practice-小小的注意事项"></a>practice-小小的注意事项</h2><ul>
+<li><p>响应返回pojo对象时为了避免密码放出，可以在pojo的password上添加JsonIgnore注解，使SringMVC将对象转化成Json时忽略password</p>
+</li>
+<li><p>数据库命名与实体类命名不一致时，若使用mybatis可以在application.yml中配置mybtis.configuration.map-underscore-to-camel-case: true开启驼峰命名与下划线命名的自动转换</p>
+</li>
+<li><p>控制器方法参数列表加入@RequestBody以后MVC才能把请求数据映射为后面定义的数据类型</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@PatchMapping(@&quot;/updatePwd&quot;)</span></span><br><span class="line"><span class="keyword">public</span> Result <span class="title function_">updatePwd</span><span class="params">(<span class="meta">@RequestBody</span> Map&lt;String,String&gt; params)</span>&#123;</span><br><span class="line">    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h2 id="practice-ThreadLocal提供线程局部变量"><a href="#practice-ThreadLocal提供线程局部变量" class="headerlink" title="practice-ThreadLocal提供线程局部变量"></a>practice-ThreadLocal提供线程局部变量</h2><p>单个线程内短暂保存数据，可以在每次请求前调用设置数据，避免请求重复获取请求数据，在请求后remove防止内存泄漏</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">ThreadLocalUtil</span> &#123;</span><br><span class="line">    <span class="comment">//提供ThreadLocal对象,</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">ThreadLocal</span> <span class="variable">THREAD_LOCAL</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">ThreadLocal</span>();</span><br><span class="line"></span><br><span class="line">    <span class="comment">//根据键获取值</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> &lt;T&gt; T <span class="title function_">get</span><span class="params">()</span>&#123;</span><br><span class="line">        <span class="keyword">return</span> (T) THREAD_LOCAL.get();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//存储键值对</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">set</span><span class="params">(Object value)</span>&#123;</span><br><span class="line">        THREAD_LOCAL.set(value);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="comment">//清除ThreadLocal 防止内存泄漏</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">remove</span><span class="params">()</span>&#123;</span><br><span class="line">        THREAD_LOCAL.remove();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="practice-HTTP请求方法"><a href="#practice-HTTP请求方法" class="headerlink" title="practice-HTTP请求方法"></a>practice-HTTP请求方法</h2><table>
+<thead>
+<tr>
+<th align="left">序号</th>
+<th align="left">方法</th>
+<th align="left">描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">1</td>
+<td align="left">GET</td>
+<td align="left">从服务器<em><strong>获取资源</strong></em>。用于请求数据而不对数据进行更改。例如，从服务器获取网页、图片等。</td>
+</tr>
+<tr>
+<td align="left">2</td>
+<td align="left">POST</td>
+<td align="left">向服务器发送数据以<em><strong>创建新资源</strong></em>。常用于提交表单数据或上传文件。发送的数据包含在请求体中。</td>
+</tr>
+<tr>
+<td align="left">3</td>
+<td align="left">PUT</td>
+<td align="left">向服务器发送数据以<em><strong>更新现有资源</strong></em>。如果资源不存在，则创建新的资源。与 POST 不同，PUT 通常是幂等的，即多次执行相同的 PUT 请求不会产生不同的结果。</td>
+</tr>
+<tr>
+<td align="left">4</td>
+<td align="left">DELETE</td>
+<td align="left">从服务器<em><strong>删除指定的资源</strong></em>。请求中包含要删除的资源标识符。</td>
+</tr>
+<tr>
+<td align="left">5</td>
+<td align="left">PATCH</td>
+<td align="left">对资源进行<em><strong>部分修改</strong></em>。与 PUT 类似，但 PATCH 只更改部分数据而不是替换整个资源。</td>
+</tr>
+<tr>
+<td align="left">6</td>
+<td align="left">HEAD</td>
+<td align="left">类似于 GET，但服务器只<em><strong>返回响应的头部</strong></em>，不返回实际数据。用于检查资源的元数据（例如，检查资源是否存在，查看响应的头部信息）。</td>
+</tr>
+<tr>
+<td align="left">7</td>
+<td align="left">OPTIONS</td>
+<td align="left">返回服务器支持的 HTTP 方法。用于<em><strong>检查服务器支持哪些请求方法</strong></em>，通常用于跨域资源共享（CORS）的预检请求。</td>
+</tr>
+<tr>
+<td align="left">8</td>
+<td align="left">TRACE</td>
+<td align="left"><em><strong>回显服务器收到的请求</strong></em>，主要用于诊断。客户端可以查看请求在服务器中的处理路径。</td>
+</tr>
+<tr>
+<td align="left">9</td>
+<td align="left">CONNECT</td>
+<td align="left"><em><strong>建立一个到服务器的隧道</strong></em>，通常用于 HTTPS 连接。客户端可以通过该隧道发送加密的数据。</td>
+</tr>
+</tbody></table>
+<h2 id="practice-实体参数校验"><a href="#practice-实体参数校验" class="headerlink" title="practice-实体参数校验"></a>practice-实体参数校验</h2><ol>
+<li><p>实体类上加@Data注解，在具体字段名上加@NootNull,@NotEmpty,@Email等注解</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Data</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">User</span> &#123;</span><br><span class="line">    <span class="meta">@NotNULL</span></span><br><span class="line">    <span class="keyword">private</span> Integer id;<span class="comment">//主键ID</span></span><br><span class="line">    </span><br><span class="line">    privete String username;<span class="comment">//用户名</span></span><br><span class="line">    <span class="keyword">private</span> String password;<span class="comment">//密码</span></span><br><span class="line">    </span><br><span class="line">    <span class="meta">@NotEmpty</span></span><br><span class="line">    <span class="meta">@Pattern(regexp =&quot;^\\S&#123;1,10&#125;$&quot;)</span></span><br><span class="line">    <span class="keyword">private</span> String nickname;<span class="comment">//昵称</span></span><br><span class="line">             </span><br><span class="line">    <span class="meta">@NotEmpty</span></span><br><span class="line">    <span class="meta">@Email</span></span><br><span class="line">    <span class="keyword">private</span> string email;<span class="comment">//邮箱</span></span><br><span class="line">             </span><br><span class="line">    <span class="keyword">private</span> string userPic;<span class="comment">//用户头像地址</span></span><br><span class="line">    <span class="keyword">private</span> LocalDateTime createTime;<span class="comment">//创建时间</span></span><br><span class="line">    <span class="keyword">private</span> LocalDateTime updateTime;<span class="comment">//更新时间</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>在实体类声名前添加@Validated注解</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@PutMapping(@&quot;/update&quot;)</span></span><br><span class="line"><span class="keyword">public</span> Result <span class="title function_">update</span><span class="params">(<span class="meta">@RequestBody</span> <span class="meta">@Validated</span> User user)</span>&#123;</span><br><span class="line">    userService.update(user);</span><br><span class="line">	<span class="keyword">return</span> Result.success();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+</ol>
+<h2 id="practice-分组校验"><a href="#practice-分组校验" class="headerlink" title="practice-分组校验"></a>practice-分组校验</h2><ol>
+<li>定义分组：在pojo内定义分组的接口</li>
+<li>定义校验项时指定归属分组：为每个校验注解分配分组</li>
+<li>校验时指定要校验的分组：在@Vlidated(Pojo.Add.class)后添加要校验的分组</li>
+</ol>
+<p>tips:</p>
+<ul>
+<li>某校验项没有指定分组，morenshuyuDefault分组</li>
+<li>分组之间可以继承，A extends B，A拥有B所有校验项</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Data</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Category</span> &#123;</span><br><span class="line">    <span class="meta">@NotNull(groups = &#123;Update.class&#125;)</span></span><br><span class="line">    <span class="keyword">private</span> Integer id;<span class="comment">//主键ID</span></span><br><span class="line"></span><br><span class="line">    <span class="meta">@NotEmpty</span></span><br><span class="line">    <span class="keyword">private</span> String categoryName;<span class="comment">//分类名称</span></span><br><span class="line">    <span class="meta">@NotEmpty</span></span><br><span class="line">    <span class="keyword">private</span> String categoryAlias;<span class="comment">//分类别名</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> Integer createUser;<span class="comment">//创建人ID</span></span><br><span class="line"></span><br><span class="line">    <span class="meta">@JsonFormat(pattern = &quot;yyyy-MM-dd HH:mm:ss&quot;)</span></span><br><span class="line">    <span class="keyword">private</span> LocalDateTime createTime;<span class="comment">//创建时间</span></span><br><span class="line">    <span class="meta">@JsonFormat(pattern = &quot;yyyy-MM-dd HH:mm:ss&quot;)</span></span><br><span class="line">    <span class="keyword">private</span> LocalDateTime updateTime;<span class="comment">//更新时间</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">interface</span> <span class="title class_">Add</span> <span class="keyword">extends</span> <span class="title class_">Default</span> &#123;&#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">interface</span> <span class="title class_">Update</span> <span class="keyword">extends</span> <span class="title class_">Default</span>&#123;&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 具体使用</span></span><br><span class="line">(<span class="meta">@Validated(Category.Update.class)</span> Category ct)</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="practice-自定义校验"><a href="#practice-自定义校验" class="headerlink" title="practice-自定义校验"></a>practice-自定义校验</h2><p>以State只能为”已发布”，”草稿”为例</p>
+<ol>
+<li><p>自定义注解State</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">package</span> com.lth.anno;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> com.lth.validation.StateValidation;</span><br><span class="line"><span class="keyword">import</span> jakarta.validation.Constraint;</span><br><span class="line"><span class="keyword">import</span> jakarta.validation.Payload;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.lang.annotation.*;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="meta">@Documented</span></span><br><span class="line"><span class="meta">@Target(ElementType.FIELD)</span></span><br><span class="line"><span class="meta">@Retention(RetentionPolicy.RUNTIME)</span></span><br><span class="line"><span class="comment">// 指定校验规则的类StateValidation</span></span><br><span class="line"><span class="meta">@Constraint(validatedBy = &#123;StateValidation.class&#125;)</span></span><br><span class="line"><span class="keyword">public</span> <span class="meta">@interface</span> State &#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 提供校验规则的信息</span></span><br><span class="line">    String <span class="title function_">message</span><span class="params">()</span> <span class="keyword">default</span> <span class="string">&quot;State的值只能是已发布或草稿&quot;</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 指定分组</span></span><br><span class="line">    Class&lt;?&gt;[] groups() <span class="keyword">default</span> &#123;&#125;;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 负载</span></span><br><span class="line">    Class&lt;? <span class="keyword">extends</span> <span class="title class_">Payload</span>&gt;[] payload() <span class="keyword">default</span> &#123;&#125;;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+</li>
+<li><p>自定义校验数据的类StateValidation实现ConstraintValidator接口</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">package</span> com.lth.validation;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> com.lth.anno.State;</span><br><span class="line"><span class="keyword">import</span> jakarta.validation.ConstraintValidator;</span><br><span class="line"></span><br><span class="line"><span class="comment">// &lt;给哪个注解提供规则,校验的数据类型&gt;</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">StateValidation</span> <span class="keyword">implements</span> <span class="title class_">ConstraintValidator</span>&lt;State, String&gt; &#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">isValid</span><span class="params">(String value, jakarta.validation.ConstraintValidatorContext context)</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;已发布&quot;</span>.equals(value) || <span class="string">&quot;草稿&quot;</span>.equals(value);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+</li>
+<li><p>在需要的地方使用自定义注解@State</p>
+</li>
+</ol>
+<h2 id="practice-文件上传"><a href="#practice-文件上传" class="headerlink" title="practice-文件上传"></a>practice-文件上传</h2><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@RestController</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">FileUploadController</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@PostMapping(&quot;/upload&quot;)</span></span><br><span class="line">    <span class="keyword">public</span> Result&lt;String&gt; <span class="title function_">upload</span><span class="params">(MultipartFile file)</span> <span class="keyword">throws</span> IOException &#123;</span><br><span class="line"></span><br><span class="line">        <span class="type">String</span> <span class="variable">originalFilename</span> <span class="operator">=</span> file.getOriginalFilename();</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 保证文件名字唯一，避免覆盖</span></span><br><span class="line">        <span class="type">String</span> <span class="variable">fileName</span> <span class="operator">=</span> UUID.randomUUID().toString() + originalFilename.substring(originalFilename.lastIndexOf(<span class="string">&quot;.&quot;</span>));</span><br><span class="line"></span><br><span class="line">        file.transferTo(<span class="keyword">new</span> <span class="title class_">File</span>(<span class="string">&quot;D:\\Projects\\Idea\\big-event\\src\\test\\resources\\&quot;</span>+fileName));</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> Result.success(<span class="string">&quot;http://localhost:8080/.../&quot;</span> + fileName);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="practice-登陆优化"><a href="#practice-登陆优化" class="headerlink" title="practice-登陆优化"></a>practice-登陆优化</h2><p>令牌主动失效机制</p>
+<ul>
+<li><p>登陆成功给浏览器响应令牌，同时把令牌存到redis</p>
+</li>
+<li><p>登录拦截器验证浏览器令牌同时对比redis存储的令牌是否一致</p>
+</li>
+<li><p>修改密码后删除redis存储的旧令牌</p>
+</li>
+</ul>
+<p>SpringBoot集成redis</p>
+<ul>
+<li>导入spring-boot-starter-data-redis起步依赖</li>
+<li>在yml配置文件中,配置redis连接信息</li>
+<li>调用API(StringRedisTemplate)完成字符串的存取操作 </li>
+<li>注意，和数据库一样，需要先启动服务才能使用</li>
+</ul>
+<h2 id="practice-属性配置方式（按优先级排序）"><a href="#practice-属性配置方式（按优先级排序）" class="headerlink" title="practice-属性配置方式（按优先级排序）"></a>practice-属性配置方式（按优先级排序）</h2><ul>
+<li>命令行参数 –server.port&#x3D;10010</li>
+<li>操作系统环境变量server.port 8888</li>
+<li>jar包所在目录下的application.yml</li>
+<li>项目resources下的application.yml</li>
+</ul>
+<h2 id="practice-多环境开发"><a href="#practice-多环境开发" class="headerlink" title="practice-多环境开发"></a>practice-多环境开发</h2><h4 id="基础使用："><a href="#基础使用：" class="headerlink" title="基础使用："></a>基础使用：</h4><ol>
+<li><p>单文件配置</p>
+<ul>
+<li>— 分隔不同环境的配置</li>
+<li>spring.config.activate.on-profile 配置所属的环境</li>
+<li>spring.profiles.active 激活环境</li>
+</ul>
+<figure class="highlight yml"><table><tr><td class="code"><pre><span class="line"><span class="comment">#通用配置，指定生效环境等等</span></span><br><span class="line"><span class="attr">spring:</span></span><br><span class="line">    <span class="attr">profiles:</span></span><br><span class="line">        <span class="attr">active:</span> <span class="string">dev</span></span><br><span class="line"><span class="meta">---</span></span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="comment">#开发环境</span></span><br><span class="line"><span class="attr">spring:</span></span><br><span class="line">    <span class="attr">config:</span></span><br><span class="line">        <span class="attr">activate:</span></span><br><span class="line">            <span class="attr">on-profile:</span> <span class="string">dev</span></span><br><span class="line"><span class="attr">server:</span></span><br><span class="line">	<span class="attr">port:</span> <span class="number">8081</span></span><br><span class="line"><span class="meta">---</span></span><br><span class="line"><span class="meta">	</span></span><br><span class="line"><span class="comment">#测试环境</span></span><br><span class="line"><span class="attr">spring:</span></span><br><span class="line">    <span class="attr">config:</span></span><br><span class="line">        <span class="attr">activate:</span></span><br><span class="line">       		<span class="attr">on-profile:</span> <span class="string">test</span></span><br><span class="line"><span class="attr">server:</span></span><br><span class="line">    <span class="attr">port:</span> <span class="number">8082</span></span><br><span class="line"><span class="meta">---</span></span><br><span class="line"><span class="meta">    </span></span><br><span class="line"><span class="comment">#生产环境</span></span><br><span class="line"><span class="attr">spring:</span></span><br><span class="line">    <span class="attr">config:</span></span><br><span class="line">        <span class="attr">activate:</span></span><br><span class="line">            <span class="attr">on-profile:</span> <span class="string">pro</span></span><br><span class="line"><span class="attr">server:</span></span><br><span class="line">	<span class="attr">port:</span> <span class="number">8083</span></span><br></pre></td></tr></table></figure>
+
+
+</li>
+<li><p>多文件配置</p>
+<ul>
+<li>通过多个文件分别配置不同环境的属性</li>
+<li>文件的名字为 application-环境名称.yml</li>
+<li>在application.yml中激活环境，方法同单文件配置</li>
+</ul>
+</li>
+</ol>
+<h4 id="分组："><a href="#分组：" class="headerlink" title="分组："></a>分组：</h4><p>类似于多文件配置</p>
+<ul>
+<li>按照配置的类别，把配置信息配置到不同的配置文件中<br>application-分类名.yml</li>
+<li>在application.yml中定义分组<br>spring.profiles.group</li>
+<li>在application.yml中激活分组<br>spring.profiles.active</li>
+</ul>
+<figure class="highlight yml"><table><tr><td class="code"><pre><span class="line"><span class="attr">spring:</span></span><br><span class="line">    <span class="attr">profiles:</span></span><br><span class="line">        <span class="attr">group:</span></span><br><span class="line">        	<span class="attr">&quot;dev&quot;:</span> <span class="string">devServer,devDB,devSelf</span></span><br><span class="line">			<span class="comment">#&quot;test&quot;: testServer,testDB,testSelf</span></span><br><span class="line">	<span class="attr">active:</span> <span class="string">dev</span></span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<h1 id="实战篇-前端"><a href="#实战篇-前端" class="headerlink" title="实战篇-前端"></a>实战篇-前端</h1><h2 id="Vue快速入门"><a href="#Vue快速入门" class="headerlink" title="Vue快速入门"></a>Vue快速入门</h2><ul>
+<li><p>准备工作</p>
+<ul>
+<li><p>引入Vue模块</p>
+</li>
+<li><p>创建Vue的应用实例</p>
+</li>
+<li><p>定义元素(div)，交给Vue控制</p>
+</li>
+</ul>
+</li>
+<li><p>构建用户界面</p>
+<ul>
+<li><p>准备数据</p>
+</li>
+<li><p>用插值表达式渲染</p>
+</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">&quot;app&quot;</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">h1</span>&gt;</span>&#123;&#123;msg&#125;&#125;<span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">type</span>=<span class="string">&quot;module&quot;</span>&gt;</span><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript">    <span class="keyword">import</span> &#123; createApp &#125; <span class="keyword">from</span> <span class="string">&#x27;https://unpkg.com/vue@3/dist/vue.esm-browser.js&#x27;</span></span></span><br><span class="line"><span class="language-javascript">    </span></span><br><span class="line"><span class="language-javascript">    <span class="title function_">createApp</span>(&#123;</span></span><br><span class="line"><span class="language-javascript">        <span class="title function_">data</span>(<span class="params"></span>)&#123;</span></span><br><span class="line"><span class="language-javascript">            <span class="keyword">return</span> &#123;</span></span><br><span class="line"><span class="language-javascript">            	<span class="attr">msg</span>: <span class="string">&quot;hello vue3&quot;</span></span></span><br><span class="line"><span class="language-javascript">        &#125;</span></span><br><span class="line"><span class="language-javascript">    &#125;).<span class="title function_">mount</span>(<span class="string">&quot;#app&quot;</span>)</span></span><br><span class="line"><span class="language-javascript"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="常用指令"><a href="#常用指令" class="headerlink" title="常用指令"></a>常用指令</h4><table>
+<thead>
+<tr>
+<th>指令</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>v-for</td>
+<td>列表渲染，遍历容器的元素或者对象的属性</td>
+</tr>
+<tr>
+<td>v-bind</td>
+<td>为HTML标签绑定属性值，如设置 href，css样式等</td>
+</tr>
+<tr>
+<td>v-if&#x2F;v-else-if&#x2F;v-else</td>
+<td>条件性的渲染某元素，判定为true时渲染，否则不渲染</td>
+</tr>
+<tr>
+<td>v-show</td>
+<td>根据条件展示某元素，区别在于切换的是display属性的值</td>
+</tr>
+<tr>
+<td>v-model</td>
+<td>在表单元素上创建双向数据绑定</td>
+</tr>
+<tr>
+<td>v-on</td>
+<td>为HTML标签绑定事件</td>
+</tr>
+</tbody></table>
+<h6 id="v-for"><a href="#v-for" class="headerlink" title="v-for"></a>v-for</h6><ul>
+<li><p>作用:	列表渲染，遍历容器的元素或者对象的属性</p>
+</li>
+<li><p>语法:     v-for  &#x3D; “(item,index) in items”</p>
+<ul>
+<li><p>参数说明:</p>
+<p>items 为要遍历的数组，要定义在data中</p>
+<p>item 为遍历出来的元素</p>
+<p>index 为索引&#x2F;下标，从0开始 ;可以省略，省略index语法:v-for&#x3D;”item in items”</p>
+</li>
+</ul>
+</li>
+</ul>
+<h6 id="v-bind"><a href="#v-bind" class="headerlink" title="v-bind"></a>v-bind</h6><ul>
+<li>作用:	动态为HTML标签绑定属性值，如设置href，src，style样式等</li>
+<li>语法:     v-bind:属性名&#x3D;“属性值”</li>
+<li>简化:     :属性名&#x3D;”属性值”</li>
+</ul>
+<h6 id="v-if-v-show"><a href="#v-if-v-show" class="headerlink" title="v-if &amp; v-show"></a>v-if &amp; v-show</h6><ul>
+<li><p>作用: 这两类指令都是用来控制元素的显示与隐藏的</p>
+<p><strong>v-if</strong></p>
+<ul>
+<li><p>语法:v-if&#x3D;”表达式”，表达式值为 true，显示;false，隐藏</p>
+</li>
+<li><p>其它:可以配合 v-else-if &#x2F;v-else 进行链式调用条件判断</p>
+</li>
+<li><p>原理:基于条件判断，来控制创建或移除元素节点(条件渲染)</p>
+</li>
+<li><p>场景:要么显示，要么不显示，不频繁切换的场景</p>
+</li>
+</ul>
+<p><strong>v-show</strong></p>
+<ul>
+<li><p>语法:v-show&#x3D;”表达式”，表达式值为 true，显示;false，隐藏</p>
+</li>
+<li><p>原理:基于CSS样式display来控制显示与隐藏</p>
+</li>
+<li><p>场景:频繁切换显示隐藏的场景</p>
+</li>
+</ul>
+</li>
+</ul>
+<h6 id="v-on"><a href="#v-on" class="headerlink" title="v-on"></a>v-on</h6><ul>
+<li><p>作用:为html标签绑定事件</p>
+</li>
+<li><p>语法:</p>
+<p>​	v-on:事件名&#x3D;”函数名”</p>
+<p>​	简写为 @事件名&#x3D;”函数名”</p>
+</li>
+<li><p>createApp({ data(){需要用到的数据}，methods:{需要用到的函数方法}})</p>
+</li>
+</ul>
+<h6 id="v-model"><a href="#v-model" class="headerlink" title="v-model"></a>v-model</h6><ul>
+<li>作用: 在表单元素上使用，双向数据绑定。可以方便的 获取 或 设置 表单项数据。</li>
+<li>语法: v-model&#x3D;”变量名”</li>
+</ul>
+<h2 id="Vue生命周期"><a href="#Vue生命周期" class="headerlink" title="Vue生命周期"></a>Vue生命周期</h2><table>
+<thead>
+<tr>
+<th>状态</th>
+<th>阶段周期</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>beforecreate</td>
+<td>创建前</td>
+</tr>
+<tr>
+<td>created</td>
+<td>创建后</td>
+</tr>
+<tr>
+<td>beforeMount</td>
+<td>载入前</td>
+</tr>
+<tr>
+<td><strong>mounted</strong></td>
+<td><strong>挂载完成</strong>（与data同级）</td>
+</tr>
+<tr>
+<td>beforeUpdate</td>
+<td>数据更新前</td>
+</tr>
+<tr>
+<td>updated</td>
+<td>数据更新后</td>
+</tr>
+<tr>
+<td>beforeUnmount</td>
+<td>组件销毁前</td>
+</tr>
+<tr>
+<td>unmounted</td>
+<td>组件销毁后</td>
+</tr>
+</tbody></table>
+<h2 id="Axios"><a href="#Axios" class="headerlink" title="Axios"></a>Axios</h2><p>介绍：Axios对原生Ajax进行封装，简化书写，快速开发</p>
+<p>使用步骤：引入Axios的js文件（官网），使用Axios发送请求获取结果</p>
+<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">&quot;https://unpkg.com/axios/dist/axios.min.js&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"></span><br><span class="line">let article=&#123;</span><br><span class="line">    title:&#x27;明天会更好&#x27;,</span><br><span class="line">    category:&#x27;生活&#x27;,</span><br><span class="line">    time:&#x27;2000-01-01,</span><br><span class="line">    state:&#x27;草稿</span><br><span class="line">&#125;</span><br><span class="line">axios(&#123;</span><br><span class="line">    // method: &#x27;GET&#x27;,</span><br><span class="line">    // url: &#x27;https://mock.apifox.cn/m1/3083103-0-default/emps/list&#x27;</span><br><span class="line"></span><br><span class="line"> 	method:&#x27;post&#x27;,</span><br><span class="line">    url:&#x27;http://localhost:8080/article/add&#x27;,</span><br><span class="line">	data:article</span><br><span class="line">&#125;).then((result) = &gt;&#123;					// 成功回调函数</span><br><span class="line">	console.log(result.data);  </span><br><span class="line">&#125;).catch((err) =&gt; &#123;						// 失败回调函数</span><br><span class="line">	alert(err);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>请求方式别名：axios.请求方式(url [, data [, config]]).then().catch()	[]表示可选</p>
+<figure class="highlight html"><table><tr><td class="code"><pre><span class="line">axios.get(url).then((res)=&gt;&#123;...&#125;).catch((err)=&gt;&#123;...&#125;)</span><br><span class="line">axios.post(url,data).then((res)=&gt;&#123;...&#125;).catch((err)=&gt;&#123;...&#125;)</span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="拦截器"><a href="#拦截器" class="headerlink" title="拦截器"></a>拦截器</h4><h6 id="请求拦截器"><a href="#请求拦截器" class="headerlink" title="请求拦截器"></a>请求拦截器</h6><p>当进入主页后，将来要与后台交互，都需要携带token，如果每次请求都写这样的代码，将会比较繁琐，此时可以将携带token的代码通过请求拦截器统一处理</p>
+<p>在 src&#x2F;util&#x2F;request.js中</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="comment">//导入token状态</span></span><br><span class="line"><span class="keyword">import</span> &#123; useTokenStore &#125; <span class="keyword">from</span> <span class="string">&#x27;@/stores/token.js&#x27;</span>;</span><br><span class="line"><span class="comment">//添加请求拦截器</span></span><br><span class="line">instance.<span class="property">interceptors</span>.<span class="property">request</span>.<span class="title function_">use</span>(</span><br><span class="line">    <span class="function">(<span class="params">config</span>)=&gt;</span>&#123;</span><br><span class="line">        <span class="comment">//在发送请求之前做什么</span></span><br><span class="line">        <span class="keyword">let</span> tokenStore = <span class="title function_">useTokenStore</span>()</span><br><span class="line">        <span class="comment">//如果token中有值，在携带</span></span><br><span class="line">        <span class="keyword">if</span>(tokenStore.<span class="property">token</span>)&#123;</span><br><span class="line">            config.<span class="property">headers</span>.<span class="property">Authorization</span>=tokenStore.<span class="property">token</span></span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> config</span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="function">(<span class="params">err</span>)=&gt;</span>&#123;</span><br><span class="line">        <span class="comment">//如果请求错误直接返回错误</span></span><br><span class="line">        <span class="title class_">Promise</span>.<span class="title function_">reject</span>(err)</span><br><span class="line">    &#125;</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<h6 id="响应拦截器"><a href="#响应拦截器" class="headerlink" title="响应拦截器"></a>响应拦截器</h6><p>成功，响应数据处理；失败，响应错误提示。在请求或响应被then或catch处理前拦截它们，避免重复的then、catch</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="comment">//定制请求的实例</span></span><br><span class="line"><span class="comment">//导入axios npm install axios</span></span><br><span class="line"><span class="keyword">import</span> axios <span class="keyword">from</span> <span class="string">&#x27;axios&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">//定义一个变量,记录公共的前缀 ，baseURL</span></span><br><span class="line"><span class="keyword">const</span> baseURL= <span class="string">&#x27;http://localhost:8080&#x27;</span></span><br><span class="line"><span class="keyword">const</span> instance = axios.<span class="title function_">create</span>(&#123;baseURL&#125;）</span><br><span class="line">                              </span><br><span class="line"><span class="comment">//添加 响应拦截器</span></span><br><span class="line">instance.<span class="property">interceptors</span>.<span class="property">response</span>.<span class="title function_">use</span>(</span><br><span class="line">    <span class="function"><span class="params">result</span>=&gt;</span>&#123;</span><br><span class="line">    	<span class="keyword">return</span> result.<span class="property">data</span>;</span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="function"><span class="params">err</span>=&gt;</span>&#123;</span><br><span class="line">        <span class="title function_">alert</span>(<span class="string">&#x27;服务异常&#x27;</span>);</span><br><span class="line">    	<span class="keyword">return</span> <span class="title class_">Promise</span>.<span class="title function_">reject</span>(err);<span class="comment">//异步的状态转化成失败的状态</span></span><br><span class="line">    &#125;</span><br><span class="line">)</span><br><span class="line"><span class="comment">//导出请求实例</span></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> instance;</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="Element-Plus"><a href="#Element-Plus" class="headerlink" title="Element Plus"></a>Element Plus</h2><h4 id="快速入门"><a href="#快速入门" class="headerlink" title="快速入门"></a>快速入门</h4><ul>
+<li>创建一个工程化的vue项目</li>
+<li>项目目录下npm install element-plus –save</li>
+<li>main.js中引入组件库（建议参考官方文档）</li>
+</ul>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123;createApp &#125;<span class="keyword">from</span> <span class="string">&#x27;vue&#x27;</span>			<span class="comment">//导入vue</span></span><br><span class="line"><span class="keyword">import</span> <span class="title class_">ElementPlus</span> <span class="keyword">from</span><span class="string">&#x27;element-plus&#x27;</span>	<span class="comment">//导入element-plus</span></span><br><span class="line"><span class="keyword">import</span> <span class="string">&#x27;element-plus/dist/index.css&#x27;</span>	<span class="comment">//导入element-plus的样式</span></span><br><span class="line"><span class="keyword">import</span> <span class="title class_">App</span> <span class="keyword">from</span><span class="string">&#x27;./App.vue&quot;				//导入app.vue</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">const app = createApp(App)				//创建应用实例</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">app.use(ElementPlus)					//使用element-plus</span></span><br><span class="line"><span class="string">app.mount(&#x27;</span>#app<span class="string">&#x27;)						//控制htm1元素</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="常用组件"><a href="#常用组件" class="headerlink" title="常用组件"></a>常用组件</h4><p>表格、分页条、表单、卡片…</p>
+<h2 id="跨域问题"><a href="#跨域问题" class="headerlink" title="跨域问题"></a>跨域问题</h2><p>由于<strong>浏览器</strong>的同源策略限制，向不同源(不同协议、不同域名、不同端口)发送ajax请求会失败，可以通过配置代理的方式解决</p>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="D:\使用优化\Typora\笔记\img\QQ20241005-153752.png" alt="QQ20241005-153752"></p>
+<p>在request.js配置baseURL为&#x2F;api，默认本地ip:port&#x2F;api，vite.config.js中配置代理，当changeOrigin为true时会将ip:port更改为目标地址端口，同时将&#x2F;api变为空字符串，相当于在目标浏览器发送本地请求</p>
+<h2 id="路由"><a href="#路由" class="headerlink" title="路由"></a>路由</h2><p>在App.vue中，不能同时展示Login.vue和Layout.vue，实际的需求是用户第一次访问程序，先展示登录页面，当用户登录成功后，再展示主页面，如果要达成这个需求，需要用到vue提供的路由相关的知识</p>
+<p>路由，从起点到终点时，决定从起点到终点的路径的进程，在前端工程中，路由指的是根据不同的访问路径，展示不同组件的内容。Vue Router是Vue.js的官方路由，它与Vue.js深度集成，让Vue.js构建单页面应用变得更加轻而易举</p>
+<h4 id="基础使用"><a href="#基础使用" class="headerlink" title="基础使用"></a>基础使用</h4><ul>
+<li>安装路由</li>
+</ul>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line">npm install vue-router@<span class="number">4</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p>创建路由器，并导出</p>
+<p>在src&#x2F;router目录下，定义一个js文件，起名为index.js。这样名字的js文件在导入时，可以不写文件名，只要定位到文件所在的文件夹即可，使用起来很方便</p>
+</li>
+</ul>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="comment">//导入vue-router</span></span><br><span class="line"><span class="keyword">import</span> &#123; createRouter, createWebHistory &#125; <span class="keyword">from</span> <span class="string">&#x27;vue-router&#x27;</span></span><br><span class="line"><span class="comment">//导入组件</span></span><br><span class="line"><span class="keyword">import</span> <span class="title class_">LoginVue</span> <span class="keyword">from</span> <span class="string">&#x27;@/views/Login.vue&#x27;</span></span><br><span class="line"><span class="keyword">import</span> <span class="title class_">LayoutVue</span> <span class="keyword">from</span> <span class="string">&#x27;@/views/Layout.vue&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//定义路由关系</span></span><br><span class="line"><span class="keyword">const</span> routes = [</span><br><span class="line">    &#123; <span class="attr">path</span>: <span class="string">&#x27;/login&#x27;</span>, <span class="attr">component</span>: <span class="title class_">LoginVue</span> &#125;,</span><br><span class="line">    &#123; <span class="attr">path</span>: <span class="string">&#x27;/&#x27;</span>, <span class="attr">component</span>: <span class="title class_">LayoutVue</span> &#125;</span><br><span class="line">]</span><br><span class="line"></span><br><span class="line"><span class="comment">//创建路由器</span></span><br><span class="line"><span class="keyword">const</span> router = <span class="title function_">createRouter</span>(&#123;</span><br><span class="line">    <span class="attr">history</span>: <span class="title function_">createWebHistory</span>(),</span><br><span class="line">    <span class="attr">routes</span>: routes</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> router</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>在vue应用实例中使用router</li>
+</ul>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> router <span class="keyword">from</span> <span class="string">&#x27;@/router&#x27;</span></span><br><span class="line"></span><br><span class="line">app.<span class="title function_">use</span>(router)</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><h5 id="定义展示路由组件的地方"><a href="#定义展示路由组件的地方" class="headerlink" title="定义展示路由组件的地方"></a>定义展示路由组件的地方</h5>在App.vue文件的template标签中，定义router-view标签，负责承载对应不同路由展示的内容</li>
+</ul>
+<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">template</span>&gt;</span></span><br><span class="line">   <span class="tag">&lt;<span class="name">router-view</span>&gt;</span><span class="tag">&lt;/<span class="name">router-view</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">template</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>在不同路由间跳转</li>
+</ul>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123;useRouter&#125; <span class="keyword">from</span> <span class="string">&#x27;vue-router&#x27;</span>;			<span class="comment">//导入useRouter方法</span></span><br><span class="line"><span class="keyword">import</span> &#123; userLoginService &#125; <span class="keyword">from</span> <span class="string">&#x27;../api/user&#x27;</span>;</span><br><span class="line"><span class="keyword">const</span> router= <span class="title function_">useRouter</span>()						<span class="comment">//注意const要定义在函数外才能使用</span></span><br><span class="line"><span class="keyword">const</span> <span class="title function_">login</span> = <span class="keyword">async</span>(<span class="params"></span>) =&gt; &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">let</span> result = <span class="keyword">await</span> <span class="title function_">userLoginService</span>(registerData.<span class="property">value</span>);</span><br><span class="line">  </span><br><span class="line">    <span class="title class_">ElMessage</span>.<span class="title function_">success</span>(result.<span class="property">msg</span>?result.<span class="property">msg</span>:<span class="string">&#x27;登录成功&#x27;</span>)</span><br><span class="line"></span><br><span class="line">    <span class="comment">//跳转到首页</span></span><br><span class="line">    router.<span class="title function_">push</span>(<span class="string">&#x27;/&#x27;</span>)							<span class="comment">//使用方法跳转到根目录/</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="子路由"><a href="#子路由" class="headerlink" title="子路由"></a>子路由</h4><p>在src&#x2F;router&#x2F;index.js中配置子路由</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="comment">//定义路由关系</span></span><br><span class="line"><span class="keyword">const</span> routes = [</span><br><span class="line">    &#123; <span class="attr">path</span>: <span class="string">&#x27;/login&#x27;</span>, <span class="attr">component</span>: <span class="title class_">LoginVue</span> &#125;,</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="attr">path</span>: <span class="string">&#x27;/&#x27;</span>,</span><br><span class="line">        <span class="attr">component</span>: <span class="title class_">LayoutVue</span>,</span><br><span class="line">        <span class="comment">//重定向</span></span><br><span class="line">        <span class="attr">redirect</span>: <span class="string">&#x27;/article/manage&#x27;</span>,</span><br><span class="line">        <span class="comment">//子路由</span></span><br><span class="line">        <span class="attr">children</span>: [</span><br><span class="line">            &#123; <span class="attr">path</span>: <span class="string">&#x27;/article/category&#x27;</span>, <span class="attr">component</span>: <span class="title class_">ArticleCategoryVue</span> &#125;,</span><br><span class="line">            &#123; <span class="attr">path</span>: <span class="string">&#x27;/article/manage&#x27;</span>, <span class="attr">component</span>: <span class="title class_">ArticleManageVue</span> &#125;,</span><br><span class="line">            &#123; <span class="attr">path</span>: <span class="string">&#x27;/user/info&#x27;</span>, <span class="attr">component</span>: <span class="title class_">UserInfoVue</span> &#125;,</span><br><span class="line">            &#123; <span class="attr">path</span>: <span class="string">&#x27;/user/avatar&#x27;</span>, <span class="attr">component</span>: <span class="title class_">UserAvatarVUe</span> &#125;,</span><br><span class="line">            &#123; <span class="attr">path</span>: <span class="string">&#x27;/user/password&#x27;</span>, <span class="attr">component</span>: <span class="title class_">UserResetPasswordVue</span> &#125;,</span><br><span class="line">        ]</span><br><span class="line">    &#125;</span><br><span class="line">]</span><br></pre></td></tr></table></figure>
+
+<p>菜单项设置点击后跳转的路由路径：</p>
+<p>​		el-menu-item 标签的index属性可以设置点击后的路由路径</p>
+<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">el-menu-item</span> <span class="attr">index</span>=<span class="string">&quot;/article/category&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">el-icon</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">Management</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">el-icon</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">span</span>&gt;</span>文章分类<span class="tag">&lt;/<span class="name">span</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">el-menu-item</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="Pinia状态管理库"><a href="#Pinia状态管理库" class="headerlink" title="Pinia状态管理库"></a>Pinia状态管理库</h2><p>Pinia是Vue的专属状态管理库，它允许你跨组件或页面共享状态</p>
+<h3 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h3><figure class="highlight js"><table><tr><td class="code"><pre><span class="line">npm install pinia</span><br></pre></td></tr></table></figure>
+
+<h3 id="使用Pinia"><a href="#使用Pinia" class="headerlink" title="使用Pinia"></a>使用Pinia</h3><p>在main.js中，引入pinia，创建pinia实例，并调用vue应用实例的use方法使用pinia</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; createPinia &#125; <span class="keyword">from</span> <span class="string">&#x27;pinia&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> pinia = <span class="title function_">createPinia</span>()</span><br><span class="line">app.<span class="title function_">use</span>(pinia)</span><br></pre></td></tr></table></figure>
+
+<h3 id="定义Store"><a href="#定义Store" class="headerlink" title="定义Store"></a>定义Store</h3><p>在src&#x2F;stores目录下定义token.js</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; defineStore &#125; <span class="keyword">from</span> <span class="string">&quot;pinia&quot;</span>;</span><br><span class="line"><span class="keyword">import</span> &#123;ref&#125; <span class="keyword">from</span> <span class="string">&#x27;vue&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">    defineStore参数描述：</span></span><br><span class="line"><span class="comment">        第一个参数：给状态起名，具有唯一性</span></span><br><span class="line"><span class="comment">        第二个参数：函数，可以把定义该状态中拥有的内容</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">    defineStore返回值描述：</span></span><br><span class="line"><span class="comment">        返回的是一个函数，将来可以调用该函数，得到第二个参数中返回的内容</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> useTokenStore = <span class="title function_">defineStore</span>(<span class="string">&#x27;token&#x27;</span>,<span class="function">()=&gt;</span>&#123;</span><br><span class="line">    <span class="comment">//1.定义描述token</span></span><br><span class="line">    <span class="keyword">const</span> token = <span class="title function_">ref</span>(<span class="string">&#x27;&#x27;</span>)</span><br><span class="line"></span><br><span class="line">    <span class="comment">//2.定义修改token的方法</span></span><br><span class="line">    <span class="keyword">const</span> <span class="title function_">setToken</span> = (<span class="params">newToken</span>)=&gt;&#123;</span><br><span class="line">        token.<span class="property">value</span> = newToken</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//3.定义移除token的方法</span></span><br><span class="line">    <span class="keyword">const</span> <span class="title function_">removeToken</span> = (<span class="params"></span>)=&gt;&#123;</span><br><span class="line">        token.<span class="property">value</span>=<span class="string">&#x27;&#x27;</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> &#123;</span><br><span class="line">        token,setToken,removeToken</span><br><span class="line">    &#125;</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<h3 id="使用Store"><a href="#使用Store" class="headerlink" title="使用Store"></a>使用Store</h3><p>在需要使用状态的地方，导入@&#x2F;stores&#x2F;*.js , 使用即可</p>
+<p>在Login.vue中导入@&#x2F;stores&#x2F;token.js, 并且当用户登录成功后，将token保存pinia中</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="comment">//导入token状态</span></span><br><span class="line"><span class="keyword">import</span> &#123; useTokenStore &#125; <span class="keyword">from</span> <span class="string">&#x27;@/stores/token.js&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//调用useTokenStore得到状态</span></span><br><span class="line"><span class="keyword">const</span> tokenStore = <span class="title function_">useTokenStore</span>();</span><br><span class="line"></span><br><span class="line"><span class="comment">//用于登录的事件函数</span></span><br><span class="line"><span class="keyword">const</span> <span class="title function_">login</span> = <span class="keyword">async</span> (<span class="params"></span>) =&gt; &#123;</span><br><span class="line">    <span class="keyword">let</span> result = <span class="keyword">await</span> <span class="title function_">loginService</span>(registerData.<span class="property">value</span>)</span><br><span class="line">    <span class="comment">//保存token</span></span><br><span class="line">    tokenStore.<span class="title function_">setToken</span>(result.<span class="property">data</span>)</span><br><span class="line">    </span><br><span class="line">    <span class="title class_">ElMessage</span>.<span class="title function_">success</span>(<span class="string">&#x27;登录成功!&#x27;</span>)</span><br><span class="line">    router.<span class="title function_">push</span>(<span class="string">&#x27;/&#x27;</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>在article.js中导入@&#x2F;stores&#x2F;token.js, 从pinia中获取到存储的token，在发起查询文章分类列表的时候把token通过请求头的形式携带给服务器</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="comment">//导入@/stores/token.js</span></span><br><span class="line"><span class="keyword">import</span> &#123; useTokenStore &#125; <span class="keyword">from</span> <span class="string">&#x27;../stores/token&#x27;</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">//文章分类列表查询</span></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> <span class="title function_">articleCategoryListService</span> = (<span class="params"></span>) =&gt; &#123;</span><br><span class="line">    <span class="comment">//获取token状态</span></span><br><span class="line">    <span class="keyword">const</span> tokenStore = <span class="title function_">useTokenStore</span>()</span><br><span class="line">    <span class="comment">//通过请求头Authorization携带token</span></span><br><span class="line">    <span class="keyword">return</span> request.<span class="title function_">get</span>(<span class="string">&#x27;/category&#x27;</span>, &#123; <span class="attr">headers</span>: &#123; <span class="string">&#x27;Authorization&#x27;</span>: tokenStore.<span class="property">token</span> &#125; &#125;)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+]]></content>
+      <categories>
+        <category>工作</category>
+      </categories>
+      <tags>
+        <tag>工作</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>文本编辑器 Vi  Linux 新手课程</title>
     <url>/2023/12/06/%E6%96%87%E6%9C%AC%E7%BC%96%E8%BE%91%E5%99%A8-Vi-Linux-%E6%96%B0%E6%89%8B%E8%AF%BE%E7%A8%8B/</url>
     <content><![CDATA[<h1 id="Vi-Editor-Cheat-Sheet"><a href="#Vi-Editor-Cheat-Sheet" class="headerlink" title="Vi Editor Cheat Sheet"></a>Vi Editor Cheat Sheet</h1><h2 id="光标移动命令"><a href="#光标移动命令" class="headerlink" title="光标移动命令"></a>光标移动命令</h2><h3 id="字符"><a href="#字符" class="headerlink" title="字符"></a>字符</h3><table>
